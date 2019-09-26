@@ -4,12 +4,12 @@ require 'spec_helper'
 require 'pry'
 
 describe ToyRobot do
-  before :each do
+  before :context do
     @tr = ToyRobot.new
   end
 
   describe '#place' do
-    describe 'Facing' do
+    context 'Facing' do
       it 'should place robot 0x 0y NORTH' do
         @tr.place(0, 0, 'NORTH')
         expect(@tr).to have_attributes(x: 0, y: 0, f: 'NORTH')
@@ -36,7 +36,7 @@ describe ToyRobot do
       end
     end
 
-    describe 'Position' do
+    context 'Position' do
       it 'should place robot 0x, 0y, NORTH' do
         @tr.place(0, 0, 'NORTH')
         expect(@tr).to have_attributes(x: 0, y: 0, f: 'NORTH')
@@ -55,27 +55,66 @@ describe ToyRobot do
       it 'should not place robot off x grid' do
         @tr.place(6, 0, 'NORTH')
         expect(@tr).to have_attributes(x: nil, y: nil, f: nil)
+        expect(@tr).to raise_error('Cannot place robot off 5x5 grid')
       end
 
       it 'should not place robot off y grid' do
         @tr.place(0, 6, 'NORTH')
         expect(@tr).to have_attributes(x: nil, y: nil, f: nil)
+        expect(@tr).to raise_error('Cannot place robot off 5x5 grid')
       end
     end
   end
 
-  describe '#move' do
-    it 'should move robot 1 unit forward in the direction it is facing' do
+  context 'Movement and Direction' do
+    before :example do
       @tr.place(0, 0, 'NORTH')
     end
-  end
 
-  describe '#left' do
-  end
+    describe '#move' do
+      it 'should move robot 1 unit forward in the direction it is facing' do
+        @tr.move
+        expect(@tr).to have_attributes(x: 0, y: 1, f: 'NORTH')
+      end
 
-  describe '#right' do
-  end
+      it 'should not move if robot not placed' do
+        @tr = ToyRobot.new
+        @tr.move
+        expect(@tr).to raise_error('Robot must be placed before moved')
+      end
+    end
 
-  describe '#report' do
+    describe '#left' do
+      it 'should face left' do
+        @tr.left
+        expect(@tr).to have_attributes(x: 0, y: 0, f: 'WEST')
+      end
+
+      it 'should not rotate if robot not placed' do
+        @tr = ToyRobot.new
+        @tr.move
+        expect(@tr).to raise_error('Robot must be placed before moved')
+      end
+    end
+
+    describe '#right' do
+      it 'should face right' do
+        @tr.right
+        expect(@tr).to have_attributes(x:0, y:0, f: 'EAST')
+      end
+      
+      it 'should not rotate if robot not placed' do
+        @tr = ToyRobot.new
+        @tr.move
+        expect(@tr).to raise_error('Robot must be placed before moved')
+      end
+    end
+
+    describe '#report' do
+      it 'should report robot current position and direction' do
+        @tr.report
+        expect(@tr).to output('x:0 , y:0, f: "NORTH"').to_stdout
+      end
+    end
   end
 end
