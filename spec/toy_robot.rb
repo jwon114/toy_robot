@@ -4,7 +4,7 @@ require 'spec_helper'
 require 'pry'
 
 describe ToyRobot do
-  before :context do
+  before :example do
     @tr = ToyRobot.new
   end
 
@@ -31,7 +31,7 @@ describe ToyRobot do
       end
 
       it 'should not place robot with invalid direction' do
-        @tr.place(0, 0, 'INVALID')
+        expect {@tr.place(0, 0, 'INVALID')}.to raise_error(ArgumentError, 'Invalid direction')
         expect(@tr).to have_attributes(x: nil, y: nil, f: nil)
       end
     end
@@ -53,38 +53,76 @@ describe ToyRobot do
       end
 
       it 'should not place robot off x grid' do
-        @tr.place(6, 0, 'NORTH')
+        expect {@tr.place(6, 0, 'NORTH')}.to raise_error(StandardError, 'Cannot place robot off 5x5 grid')
         expect(@tr).to have_attributes(x: nil, y: nil, f: nil)
-        expect(@tr).to raise_error('Cannot place robot off 5x5 grid')
       end
 
       it 'should not place robot off y grid' do
-        @tr.place(0, 6, 'NORTH')
+        expect {@tr.place(0, 6, 'NORTH')}.to raise_error(StandardError, 'Cannot place robot off 5x5 grid')
         expect(@tr).to have_attributes(x: nil, y: nil, f: nil)
-        expect(@tr).to raise_error('Cannot place robot off 5x5 grid')
       end
     end
   end
 
   context 'Movement and Direction' do
-    before :example do
-      @tr.place(0, 0, 'NORTH')
-    end
-
     describe '#move' do
-      it 'should move robot 1 unit forward in the direction it is facing' do
+      it 'should move robot 1 unit forward in the direction if facing north' do
+        @tr.place(0, 0, 'NORTH')
         @tr.move
         expect(@tr).to have_attributes(x: 0, y: 1, f: 'NORTH')
       end
 
-      it 'should not move if robot not placed' do
-        @tr = ToyRobot.new
+      it 'should move robot 1 unit forward in the direction if facing south' do
+        @tr.place(0, 1, 'SOUTH')
         @tr.move
-        expect(@tr).to raise_error('Robot must be placed before moved')
+        expect(@tr).to have_attributes(x: 0, y: 0, f: 'SOUTH')
+      end
+
+      it 'should move robot 1 unit forward in the direction if facing east' do
+        @tr.place(0, 0, 'EAST')
+        @tr.move
+        expect(@tr).to have_attributes(x: 1, y: 0, f: 'EAST')
+      end
+
+      it 'should move robot 1 unit forward in the direction if facing west' do
+        @tr.place(1, 0, 'WEST')
+        @tr.move
+        expect(@tr).to have_attributes(x: 0, y: 0, f: 'WEST')
+      end
+
+      describe 'Error handling' do
+        it 'cannot move off the grid facing north' do
+          @tr.place(5, 5, 'NORTH')
+          expect {@tr.move}.to raise_error(StandardError, 'Cannot move robot off 5x5 grid')
+        end
+
+        it 'cannot move off the grid facing east' do
+          @tr.place(5, 5, 'EAST')
+          expect {@tr.move}.to raise_error(StandardError, 'Cannot move robot off 5x5 grid')
+        end
+
+        it 'cannot move off the grid facing south' do
+          @tr.place(5, 5, 'SOUTH')
+          expect {@tr.move}.to raise_error(StandardError, 'Cannot move robot off 5x5 grid')
+        end
+
+        it 'cannot move off the grid facing west' do
+          @tr.place(5, 5, 'WEST')
+          expect {@tr.move}.to raise_error(StandardError, 'Cannot move robot off 5x5 grid')
+        end
+
+        it 'should not move if robot not placed' do
+          @tr = ToyRobot.new
+          expect {@tr.move}.to raise_error(StandardError, 'Robot must be placed before moved')
+        end
       end
     end
 
     describe '#left' do
+      before :example do
+        @tr.place(0, 0, 'NORTH')
+      end
+
       it 'should face left' do
         @tr.left
         expect(@tr).to have_attributes(x: 0, y: 0, f: 'WEST')
