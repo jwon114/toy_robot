@@ -152,31 +152,55 @@ describe ToyRobot do
       describe 'Error handling' do
         it 'should not rotate if robot not placed' do
           @tr = ToyRobot.new
-          @tr.move
-          expect(@tr).to raise_error('Robot must be placed before moved')
+          expect{@tr.left}.to raise_error(StandardError, 'Robot must be placed before rotated left')
         end
       end
     end
 
     describe '#right' do
-      it 'should face right' do
+      it 'should face east from north' do
+        @tr.place(0, 0, 'NORTH')
         @tr.right
-        expect(@tr).to have_attributes(x:0, y:0, f: 'EAST')
+        expect(@tr).to have_attributes(x: 0, y: 0, f: 'EAST')
+      end
+
+      it 'should face south from east' do
+        @tr.place(0, 0, 'EAST')
+        @tr.right
+        expect(@tr).to have_attributes(x: 0, y: 0, f: 'SOUTH')
+      end
+
+      it 'should face west from south' do
+        @tr.place(0, 0, 'SOUTH')
+        @tr.right
+        expect(@tr).to have_attributes(x: 0, y: 0, f: 'WEST')
+      end
+
+      it 'should face north from west' do
+        @tr.place(0, 0, 'WEST')
+        @tr.right
+        expect(@tr).to have_attributes(x: 0, y: 0, f: 'NORTH')
       end
       
       describe 'Error handling' do
         it 'should not rotate if robot not placed' do
           @tr = ToyRobot.new
-          @tr.move
-          expect(@tr).to raise_error('Robot must be placed before moved')
+          expect{@tr.right}.to raise_error(StandardError, 'Robot must be placed before rotated right')
         end
       end
     end
 
     describe '#report' do
-      it 'should report robot current position and direction' do
-        @tr.report
-        expect(@tr).to output('x:0 , y:0, f: "NORTH"').to_stdout
+      it 'should report robot current position and direction when placed x:0, y:0, f:"NORTH"' do
+        @tr.place(0, 0, 'NORTH')
+        expect{@tr.report}.to output("x:0, y:0, f:'NORTH'").to_stdout
+      end
+
+      describe 'Error handling' do
+        it 'should not report if robot not placed' do
+          @tr = ToyRobot.new
+          expect{@tr.report}.to raise_error(StandardError, 'Robot must be placed before reported')
+        end
       end
     end
   end

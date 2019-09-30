@@ -39,4 +39,24 @@ class ToyRobot
       @x -= 1
     end
   end
+
+  def left
+    raise StandardError.new('Robot must be placed before rotated left') if [@x, @y, @f].any?(nil)
+
+    facing_index = FACING.index(@f)
+    @f = FACING[facing_index - 1]
+  end
+
+  def right
+    raise StandardError.new('Robot must be placed before rotated right') if [@x, @y, @f].any?(nil)
+
+    facing_index = FACING.index(@f)
+    @f = FACING[(facing_index + 1) % FACING.size]
+  end
+
+  def report
+    raise StandardError.new('Robot must be placed before reported') if [@x, @y, @f].any?(nil)
+
+    print "x:#{@x}, y:#{@y}, f:'#{@f}'"
+  end
 end
