@@ -99,22 +99,22 @@ describe ToyRobot do
       describe 'Error handling' do
         it 'cannot move off the grid facing north' do
           @tr.place(5, 5, 'NORTH')
-          expect {@tr.move}.to raise_error(StandardError, 'Cannot move robot off 5x5 grid')
+          expect(@tr).to have_attributes(x: 5, y: 5, f: 'NORTH')
         end
 
         it 'cannot move off the grid facing south' do
           @tr.place(5, 0, 'SOUTH')
-          expect {@tr.move}.to raise_error(StandardError, 'Cannot move robot off 5x5 grid')
+          expect(@tr).to have_attributes(x: 5, y: 0, f: 'SOUTH')
         end
 
         it 'cannot move off the grid facing east' do
           @tr.place(5, 5, 'EAST')
-          expect {@tr.move}.to raise_error(StandardError, 'Cannot move robot off 5x5 grid')
+          expect(@tr).to have_attributes(x: 5, y: 5, f: 'EAST')
         end
 
         it 'cannot move off the grid facing west' do
           @tr.place(0, 5, 'WEST')
-          expect {@tr.move}.to raise_error(StandardError, 'Cannot move robot off 5x5 grid')
+          expect(@tr).to have_attributes(x: 0, y: 5, f: 'WEST')
         end
 
         it 'should not move if robot not placed' do
@@ -191,9 +191,9 @@ describe ToyRobot do
     end
 
     describe '#report' do
-      it 'should report robot current position and direction when placed x:0, y:0, f:"NORTH"' do
+      it 'should report robot current position and direction when placed x:0, y:0, f:NORTH\n' do
         @tr.place(0, 0, 'NORTH')
-        expect{@tr.report}.to output("x:0, y:0, f:'NORTH'").to_stdout
+        expect{@tr.report}.to output("x:0, y:0, f:NORTH\n").to_stdout
       end
 
       describe 'Error handling' do
