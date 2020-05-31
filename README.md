@@ -5,19 +5,19 @@ Ruby >= 2.6.3
 ## Installing
 - Clone or download the repository
 - Install the dependencies
-
-    bundle install
-
+```
+bundle install
+```
 ## Running the tests
 - Run the tests
-
-    rspec
-
+```
+rspec
+```
 ## Starting the robot
 - Navigate to the root folder and start the app
-
-    ruby app.rb
-
+```
+ruby app.rb
+```
 ## Example Input and Output
 ### Example a
 
