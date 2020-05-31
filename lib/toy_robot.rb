@@ -5,6 +5,7 @@ class ToyRobot
   Y_GRID_MIN = 0
   Y_GRID_MAX = 5
   FACING = ['NORTH', 'EAST', 'SOUTH', 'WEST']
+  VALID_ACTIONS = ['PLACE', 'MOVE', 'LEFT', 'RIGHT', 'REPORT', 'HELP']
 
   def initialize
     @x = nil
@@ -62,6 +63,24 @@ class ToyRobot
     place_check(message: 'Robot must be placed before reported')
 
     puts "x:#{@x}, y:#{@y}, f:#{@f}"
+  end
+
+  def help
+    puts
+    puts '-----------------------------------------------------------'
+    puts 'Command Usage:'
+    puts '-----------------------------------------------------------'
+    puts '-- PLACE: places robot on board with positions x and y, facing in direction'
+    puts 'place x, y, facing'
+    puts '-- MOVE: moves the robot 1 unit in the direction it is facing'
+    puts 'move'
+    puts '-- LEFT: rotates the robot left'
+    puts 'left'
+    puts '-- RIGHT: rotates the robot right'
+    puts 'right'
+    puts '-- REPORT: reports on the robots current position and direction'
+    puts 'report'
+    puts
   end
 
   private

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'spec_helper'
-require 'pry'
+require './lib/toy_robot'
 
 describe ToyRobot do
   before :example do
